@@ -1,0 +1,4 @@
+- nếu attacket băng qua đc xác thực hay brute-force đc vào tk ng dùng khác -> can lấy đc toàn bộ data và chức năng tài khoản bị xâm phạm có
+- nếu vào đc acc có đặc quyền cao như admin hệ thống -> can lấy quyền điều khiển toàn bộ app và can truy cập vào cơ sở hạ tầng nội bộ
+- kể cả truy cập vào acc đặc quyền thấp thì attacker vẫn can truy cập vào in4 chúng ko nên có như in4 nhạy cảm của doanh nghiệp về mặt thương mại
+- nếu acc ko thể truy cập data nhạy cảm nó vẫn cho phép attacker truy cập vào page bổ sung để có bề mặt tấn công tiếp theo
