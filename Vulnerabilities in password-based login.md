@@ -1,3 +1,5 @@
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/44f82c9f-67f2-4dc1-a1e5-e26d4b0ff386)![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/19ad9390-ad7e-49b2-bb0d-e3472064a98b)<br>
+
 I. Lý thuyết<br>
 - đối với web login bằng mật khẩu, user đăng kí 1 tài khoản or đc gán 1 acc bởi admin
 - acc gồm: 1 username đơn nhất và 1 password bí mật
@@ -92,4 +94,38 @@ To solve the lab, enumerate a valid username, brute-force this user's password, 
 
 ![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/177575b0-bcd9-4536-ab3b-875bb79c0e7f)<br>
 
-7. 
+7. Lab: Username enumeration via response timing<br>
+- https://0a7b002503b466d781e78e29004f00b6.web-security-academy.net/<br>
+
+This lab is vulnerable to username enumeration using its response times. To solve the lab, enumerate a valid username, brute-force this user's password, then access their account page.<br>
+
+Your credentials: wiener:peter<br>
+Candidate usernames: https://portswigger.net/web-security/authentication/auth-lab-usernames<br>
+Candidate passwords: https://portswigger.net/web-security/authentication/auth-lab-passwords<br>
+ Hint
+To add to the challenge, the lab also implements a form of IP-based brute-force protection. However, this can be easily bypassed by manipulating HTTP request headers.<br>
+
+7.1: Giải<br>
+- B1: brute-force ussername -> thông báo bị chặn login -> đc bảo vệ dựa trên IP<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/dfea7646-4c18-41ff-9f85-06ea311ebdbb)<br>
+
+- B2: dùng X-Forwarded-For để vượt qua chặn kết hợp password dài (tầm 100 kí tự) để check time phản hồi<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/c56007ca-98a6-4f9d-8506-0699e90c5146)<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/57eb72ff-c216-4cdd-9cd1-b11fd336bac6)<br>
+
+- B3: thu kết quả -> username: arlington<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/582fa85e-a5f7-44d5-8058-c1572e75dedb)<br>
+
+- B4: brute-force tìm password -> password: qwertyuiop<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/22ed2acd-da0d-406a-93c4-06987438ca38)<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/f4db7663-40bf-4d08-8795-198a7286f999)<br>
+
+8. Flawed brute-force protection<br>
+8.1: Lý thuyết<br>
+- 
