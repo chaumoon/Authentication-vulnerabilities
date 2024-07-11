@@ -1,4 +1,4 @@
-![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/44f82c9f-67f2-4dc1-a1e5-e26d4b0ff386)![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/19ad9390-ad7e-49b2-bb0d-e3472064a98b)<br>
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/c9dd4daa-4c9e-4312-bb22-0bbd81f63b45)![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/44f82c9f-67f2-4dc1-a1e5-e26d4b0ff386)![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/19ad9390-ad7e-49b2-bb0d-e3472064a98b)<br>
 
 I. Lý thuyết<br>
 - đối với web login bằng mật khẩu, user đăng kí 1 tài khoản or đc gán 1 acc bởi admin
@@ -169,7 +169,16 @@ Advanced users may want to solve this lab by using a macro or the Turbo Intruder
 8.4: Account locking<br>
 - một số cách để ngăn chặn brute-force mà web xài là khóa acc khi đáp ứng 1 số tiêu chí đáng ngờ nhất định (thường là số lần login sai)
 - cx như các lỗi login thông thg, phản hồi từ server cho bt acc đã bị khóa cx giúp attacker liệt kê username
-- 
+- khóa acc cung cấp 1 mức độ bảo vệ nhất định khỏi brute-force đối vs 1 tài khoản cụ thể
+- nó ko ngăn ngừa 1 cách thỏa đáng attack trong trh attacker chỉ cố truy cập vào bất kì acc ngẫn nhiên nào mà chúng can
+- phương pháp giải quyết loại bảo vệ này:<br>
++ liệt kê list username ứng viên có khả năng hợp lệ, dựa vào liệt kê username or list username phổ biến
++ xác định 1 list rất nhỏ danh sách password mà có ít nhất 1 cái là đúng (số lượng này ko đượt vượt quá số lần login cho phép)
++ dùng tool để brute-force mật khẩu<br>
+- khóa acc cx ko bảo vệ khỏi credential stuffing attacks (tấn công nhồi in4 xác thực)
+- nó bao gồm lượng lớn cặp username:password bao gồm in4 login chính hãng bị đánh cắp trong các vụ vi phạm data
+- Credential stuffing dựa trên thực tế nh ng xài cùng 1 username và password cho nh web -> nó can đúng cho web mục tiêu
+- khóa acc ko bảo vệ khỏi credential stuffing vì mỗi username chỉ đc thử 1 lần -> đặc bt nguy hiển vì attacker can xâm phạm cùng lúc nh tài khoản chỉ bằng 1 cuộc tấn côngtự động<br>
 
 8.4.1: Lab: Username enumeration via account lock<br>
 - https://0add00f70487913d85ab3f82006c0069.web-security-academy.net/<br>
@@ -194,7 +203,44 @@ Candidate passwords: https://portswigger.net/web-security/authentication/auth-la
 
 ![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/3273eef0-1ea9-4f64-b47e-630a8963437d)<br>
 
+8.5: User rate limiting<br>
+- bảo vệ khỏi brute-force không qua lim tỉ lệ user, nếu thực hiện quá nh login trong 1 khoảng time ngắn -> IP bị chặn -> mở khóa bằng các cách<br>
++ tự động sau 1 khoảng time nhất định
++ thủ công bởi admin
++ thủ công bởi user sau khi hoàn tất CAPTCHA thành công<br>
+- nó đc ưu tiên hơn khóa acc vì ít bị liệt kê username và tấn công dos
+- nhưng ko hoàn toàn an toàn vì attacker can thao túng IP đê vượt qua bảo vệ
+- do lim này dựa trên tốc độ gửi yêu cầu HTTP nên can vượt qua bằng cách đoán nh password chỉ trong 1 yêu cầu<br>
 
+8.5.1: Lab: Broken brute-force protection, multiple credentials per request<br>
+- https://0ad200fc04fa1a54811ee377005e0019.web-security-academy.net/<br>
 
+This lab is vulnerable due to a logic flaw in its brute-force protection. To solve the lab, brute-force Carlos's password, then access his account page.<br>
 
+Victim's username: carlos<br>
+Candidate passwords: https://portswigger.net/web-security/authentication/auth-lab-passwords<br>
 
+8.5.2: Giải<br>
+- B1: thực hiện login bình thường -> bị chặn<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/8fdb61e0-1252-4e60-95bc-8a9a32bc5fdf)<br>
+
+- B2: thử đoán nhiều password trong 1 lần login <br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/2eef0e13-c1e9-4a8e-914b-f47ba0a8d323)<br>
+
+- B3: copu URL và load -> login thành công
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/6ef129f3-48b2-4533-9822-22d7b46f1853)<br>
+
+III. HTTP basic authentication<br>
+1. Lý thuyết<br>
+- khá cũ nhưng vì đơn giản và khá dễ triển khai nên xác thực dựa trên HTTP đôi khi vẫn đc xài
+- client nhận mã xác thực từ server bằng cách nối username và password rồi mã hóa bằng Base64
+- mã này đc lưu trữ và quản lý bởi browser, browser sẽ tự động thêm nó vào tiêu đề Authorization cho mọi yêu cầu tiếp theo: Authorization: Basic base64(username:password)
+- đây ko đc coi là 1 phương thức xác thực an toàn vì:<br>
++ gửi in4 login của user với mọi yêu cầu
++ trừ khi web triển khai HSTS, nếu ko in4 login của user sẽ bị đánh cắp bởi a man-in-the-middle attack<br>
+- nó ko đc hỗ trợ bảo vệ brute-force attack, mã chỉ bao gồm các giá trị tĩnh -> can bị brute-force
+- nó dễ bị tấn công bởi biện pháp khai thác liên quan đến session đặc biệt là CSRF vì nó ko có biện pháp bảo vệ nào
+- có thể cách này chỉ đưa attacker đến 1 trang web ko thú vị nhưng nó cung cấp thêm bề mặt tấn công và in4 thu thập đc can xài cho các trh khác
