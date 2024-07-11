@@ -166,6 +166,35 @@ Advanced users may want to solve this lab by using a macro or the Turbo Intruder
 
 ![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/778784ec-608d-4a97-8bb7-cabb76b626f1)<br>
 
+8.4: Account locking<br>
+- một số cách để ngăn chặn brute-force mà web xài là khóa acc khi đáp ứng 1 số tiêu chí đáng ngờ nhất định (thường là số lần login sai)
+- cx như các lỗi login thông thg, phản hồi từ server cho bt acc đã bị khóa cx giúp attacker liệt kê username
+- 
+
+8.4.1: Lab: Username enumeration via account lock<br>
+- https://0add00f70487913d85ab3f82006c0069.web-security-academy.net/<br>
+
+This lab is vulnerable to username enumeration. It uses account locking, but this contains a logic flaw. To solve the lab, enumerate a valid username, brute-force this user's password, then access their account page.<br>
+
+Candidate usernames: https://portswigger.net/web-security/authentication/auth-lab-usernames<br>
+Candidate passwords: https://portswigger.net/web-security/authentication/auth-lab-passwords<br>
+
+8.4.2: Giải<br>
+- B1: Tạo payload<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/0738b953-398d-4e0c-9e70-4ff462e3df35)<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/81cefeff-21d2-47aa-b563-e4a0f37cd900)<br>
+
+- B2: thu kết quả: username = antivirus<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/0aa34553-c2f6-4b73-895d-aebefbdc6203)<br>
+
+- B3: brute-force password = 2000<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/3273eef0-1ea9-4f64-b47e-630a8963437d)<br>
+
+
 
 
 
