@@ -128,4 +128,44 @@ To add to the challenge, the lab also implements a form of IP-based brute-force 
 
 8. Flawed brute-force protection<br>
 8.1: Lý thuyết<br>
-- 
+- bảo vệ brute-force là lm cho quá trình tự động hóa tiến trình là phức tạp nhất có thể và lm chậm tốc độ attacker thử login
+- 2 cách phổ biến nhất để ngăn chặn brute-force là:<br>
++ khóa tài khoản remote user nếu họ login sai quá nh lần
++ chặn địa chỉ IP remote user nếu họ login quá nh lần liên tiếp<br>
+- 2 cách có mức độ bảo vệ khác nhau nhưng nó can tránh attack đặc biệt nếu đc triển khai sử dụng login thiếu sót
+- VD: địa chỉ IP bị chặn nếu login quá nh lần nhưng trong 1 số triển khai, bộ đếm số lần login này sẽ đc reset nếu bn login đúng -> trước khi đạt đến só lần bị khóa login tài khoản của attacker vào để reset số lần là đc
+- -> đưa in4 login của attacker vào wordlist một cách phù hợp là vô hiệu hóa đc bảo vệ này<br>
+
+8.2: Lab: Broken brute-force protection, IP block<br>
+- https://0abd006903fb355381b97fbf003900a9.web-security-academy.net/<br>
+
+This lab is vulnerable due to a logic flaw in its password brute-force protection. To solve the lab, brute-force the victim's password, then log in and access their account page.<br>
+
+Your credentials: wiener:peter<br>
+Victim's username: carlos<br>
+Candidate passwords: https://portswigger.net/web-security/authentication/auth-lab-passwords<br>
+ Hint
+Advanced users may want to solve this lab by using a macro or the Turbo Intruder extension. However, it is possible to solve the lab without using these advanced features.<br>
+
+8.3: Giải<r>
+- B1: chặn login và chuyển sang intruder để brute-force<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/098e6ee9-dec7-42bc-a7c0-ab4ab2efdb1b)<br>
+
+- B2: tạo payload<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/5f3c2a5a-767d-4ac5-953d-96f34a732f96)<br>
+
++ lặp lại > 100 lần:<br> ![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/7a1fbe51-5b24-4c49-8b77-5d36c980e1d8)<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/1be60c22-9830-40bb-bc17-7714aa0ea787)<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/f68112fc-2893-4022-97f8-d1fad4f9fc4b)<br>
+
+- B3: tấn công và thu kết quả: password: mustang<br>
+
+![image](https://github.com/bangngoc116/Authentication-vulnerabilities/assets/127403046/778784ec-608d-4a97-8bb7-cabb76b626f1)<br>
+
+
+
+
