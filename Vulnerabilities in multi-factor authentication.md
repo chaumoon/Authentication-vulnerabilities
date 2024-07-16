@@ -1,4 +1,4 @@
-I. Lý thuyết<br>
+![image](https://github.com/user-attachments/assets/dbf3e5ed-7035-4b46-a12a-148ea09335af)I. Lý thuyết<br>
 - nh web hoàn toàn dựa vào xác thực đơn yếu tố (password) để xác thực user
 - một số web yêu cầu user xác minh danh tính dùng đa yếu tố xác thực
 - ngày càng phổ biến loại xác thực 2 yếu tố bắt buộc và tuy chọn (2FA) dựa trên những gì bạn bt và những gì bn có
@@ -65,4 +65,107 @@ You also have access to the email server to receive your 2FA verification code.<
 Carlos will not attempt to log in to the website himself.<br>
 
 3. Giải<br>
+- B1: thực hiện login và logout your acc
+- B2: gửi get/login2 tới repeater sửa username để tạo mã xác minh tạm thời cho victim's username<br>
+
+![image](https://github.com/user-attachments/assets/27a1e720-44ed-4f8a-a2a9-082c9708d78e)<br>
+
+![image](https://github.com/user-attachments/assets/78616204-7f81-4641-8c3b-1ee7edd6bc3d)<br>
+
+- B3: thực hiện login lại như bước 1 (ko logout)
+- B4: gửi post/login2 tới intruder để brute-force<br>
+
+![image](https://github.com/user-attachments/assets/780f5ff6-f036-4dd4-8c6d-ebe041adab1c)<br>
+
+![image](https://github.com/user-attachments/assets/bf06ded4-8855-45cd-ac36-16bf19170a41)<br>
+
+- B5: thu kết quả<br>
+
+![image](https://github.com/user-attachments/assets/20cdd1ef-35c9-4043-8c9a-8afc233c2b55)<br>
+
+![image](https://github.com/user-attachments/assets/ab0b08b8-870b-47d9-8dd9-81f30047dcd9)<br>
+
+- copy url và load trong browser để login<br>
+
+![image](https://github.com/user-attachments/assets/57bfb4b9-a4e8-4061-8bcc-e60ea7293fa6)<br>
+
+V. Brute-forcing 2FA verification codes<br>
+1. Lý thuyết<br>
+- cũng như password, web cx cần các bc để ngăn chặn brute-force mã xác minh 2FA
+- mã thường chỉ có 4-6 số -> nếu ko đc bảo vệ brute-force đầy đủ thì việc crack đc mã xác minh rất dễ dàng
+- một số web ngăn chặn bằng cách tự động logout user nếu họ nhập 1 số lượng nhất định mã xác minh ko chính xác
+- ko hiệu quả vì attacker can tự động tiến trình nh bc này bằng cách tạo macros cho intruder, tiện ích Turbo Intruder cx đc xài cho mục đích này<br>
+
+2. Macros<br>
+- https://portswigger.net/burp/documentation/desktop/settings/sessions#macros
+- macro là 1 chuỗi đc xác định trước của 1 or nh yêu cầu -> dùng trong quy tắc xử lý phiên để thực hiện nh tác vụ khác nhau:<br>
++ tìm nạp 1 trang của app (user's home page) để check xem phiên hiện tại còn hiệu lực ko
++ thực hiện login để lấy phiên hợp lệ mới
++ lấy mã thông báo or nonce để dùng làm tham số trong yêu cầu khác
++ khi quét or lm mở 1 yêu cầu trong tiến trình đa bc, macro can thực hiện bất kì yêu cầu cần thiết nào để đưa app vào trạng thái nơi yêu cầu đích đc chấp nhận
++ trong tiến trình đa bc, macro can hoàn thành các bc còn lại sau yêu cầu attack. nó can xác nhận hành động or kết thúc quá trình<br>
+- ngoài trình tự yêu cầu, mỗi macro chỉ định cách xử lý cookie và tham số trong trình tự cũng như mọi sự phụ thuộc lẫn nhau giữa các mục
+- thêm mới macro bằng cách nhấn Add để hiển thị hộp thoại Macro Editor
+- can chỉnh sửa các macro hiện có và thay đổi vị trí chúng trong list<br>
+
+3. Turbo Intruder<br>
+- https://portswigger.net/bappstore/9abaa233088242e8be252cd4ff534988
+- tiện ích giúp gửi lượng lớn yêu cầu HTTP và phân tích kết quả
+- nó bổ sung cho intruder bằng cách xử lý các attack tốc độ cực cao or phức tạp
+- các tính năng:<br>
++ nhanh: dùng ngăn xếp HTTP đc mã hóa thủ công từ đầu vs tốc độ cao -> trên nh mục tiêu, no can vượt xa thâm chí cả các tập lệnh Go ko đồng bộ đang thịnh hành
++ linh hoạt: attack đc cấu hình bằng python -> xử lý các yêu cầu phức tạp như yêu cầu đã đánh dấu và chuỗi tấn công nh bước; ngăn xếp HTTP tùy chỉnh giúp nó xử lý các yêu cầu ko đúng định dạng lm hỏng các thư viện khác
++ can mở rộng: can xài bộ nhớ phẳng -> cho phép các cuộc tấn công nh ngày đáng tin cậy, nó cx can chạy ko môi trg headless thông qua dòng lệnh
++ thuận tiện: kết quả ko hữu ích đc lọc bằng thuật toán phân biệt nâng cao đc điều chỉnh từ Backslash Powered Scanner<br>
+- cách dùng: đánh dấu vùng bn muốn chèn và chọn Send to Turbo Intruder -> mở của sổ có đoạn mã python can tùy chỉnh trước khi attack<br>
+
+4. Lab: 2FA bypass using a brute-force attack<br>
+- https://0a9a00ea03b6654b803663d500a60028.web-security-academy.net/<br>
+
+This lab's two-factor authentication is vulnerable to brute-forcing. You have already obtained a valid username and password, but do not have access to the user's 2FA verification code. To solve the lab, brute-force the 2FA code and access Carlos's account page.<br>
+
+Victim's credentials: carlos:montoya<br>
+
+Note<br>
+As the verification code will reset while you're running your attack, you may need to repeat this attack several times before you succeed. This is because the new code may be a number that your current Intruder attack has already attempted.<br>
+
+ Hint<br>
+You will need to use Burp macros in conjunction with Burp Intruder to solve this lab. For more information about macros, please refer to the Burp Suite documentation. Users proficient in Python might prefer to use the Turbo Intruder extension, which is available from the BApp store.<br>
+
+5. Giải<br>
+- B1: login thử để check tiến trình 2FA -> nhập sai mã xác minh 2 lần -> tự động logout -> cần tự động login trước mỗi yêu cầu<br>
+
+![image](https://github.com/user-attachments/assets/8d417fc8-b178-43b1-99ea-05e642675dd3)<br>
+
+- B2: mở Session handling rule editor<br>
+
+![image](https://github.com/user-attachments/assets/a0a35402-9b86-4ac9-b23f-f81eced7e6b2)<br>
+
+![image](https://github.com/user-attachments/assets/e505982f-0704-4f16-9802-6a6fa15e9fb7)<br>
+
+![image](https://github.com/user-attachments/assets/fa85b8ef-75a4-469f-ae08-3a7a795b692b)<br>
+
+![image](https://github.com/user-attachments/assets/ece7618a-8513-41e1-8291-73ae2073b29c)<br>
+
+![image](https://github.com/user-attachments/assets/c29fcc21-7376-43ca-a997-68f24fc9c694)<br>
+
+![image](https://github.com/user-attachments/assets/37e6e833-49d5-4b32-8df1-408667ba0d4e)<br>
+
+![image](https://github.com/user-attachments/assets/daedf6e7-163e-414d-90d7-ebb091ce871d)<br>
+
+- B3: test macro (cả 3 cái) xem nó chạy chính xác ko<br>
+
+![image](https://github.com/user-attachments/assets/c7db933a-9089-41a8-9475-2ade4a18d239)<br>
+
+-> yêu cầu cuối cùng đã có trang yêu cầu nhập mã xác minh<br>
+
+![image](https://github.com/user-attachments/assets/5268fb4a-b0d6-423c-b6ae-98a22270b634)<br>
+
+- B4: quay về trang chính và gửi post/login2 đến intruder để brute-force<br>
+
+![image](https://github.com/user-attachments/assets/644f5982-8651-45ce-bfd6-88b4456f5f83)<br>
+
+![image](https://github.com/user-attachments/assets/510066d5-19d3-48f5-b85c-c2c4920d698f)<br>
+
+- B5: thu kết quả (mã xác minh can thay đổi nên cần attack nh lần)<br>
 
