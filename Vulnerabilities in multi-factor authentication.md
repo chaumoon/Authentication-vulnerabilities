@@ -128,44 +128,7 @@ Victim's credentials: carlos:montoya<br>
 
 Note<br>
 As the verification code will reset while you're running your attack, you may need to repeat this attack several times before you succeed. This is because the new code may be a number that your current Intruder attack has already attempted.<br>
-
  Hint<br>
 You will need to use Burp macros in conjunction with Burp Intruder to solve this lab. For more information about macros, please refer to the Burp Suite documentation. Users proficient in Python might prefer to use the Turbo Intruder extension, which is available from the BApp store.<br>
 
-5. Giải<br>
-- B1: login thử để check tiến trình 2FA -> nhập sai mã xác minh 2 lần -> tự động logout -> cần tự động login trước mỗi yêu cầu<br>
-
-![image](https://github.com/user-attachments/assets/8d417fc8-b178-43b1-99ea-05e642675dd3)<br>
-
-- B2: mở Session handling rule editor<br>
-
-![image](https://github.com/user-attachments/assets/a0a35402-9b86-4ac9-b23f-f81eced7e6b2)<br>
-
-![image](https://github.com/user-attachments/assets/e505982f-0704-4f16-9802-6a6fa15e9fb7)<br>
-
-![image](https://github.com/user-attachments/assets/fa85b8ef-75a4-469f-ae08-3a7a795b692b)<br>
-
-![image](https://github.com/user-attachments/assets/ece7618a-8513-41e1-8291-73ae2073b29c)<br>
-
-![image](https://github.com/user-attachments/assets/c29fcc21-7376-43ca-a997-68f24fc9c694)<br>
-
-![image](https://github.com/user-attachments/assets/37e6e833-49d5-4b32-8df1-408667ba0d4e)<br>
-
-![image](https://github.com/user-attachments/assets/daedf6e7-163e-414d-90d7-ebb091ce871d)<br>
-
-- B3: test macro (cả 3 cái) xem nó chạy chính xác ko<br>
-
-![image](https://github.com/user-attachments/assets/c7db933a-9089-41a8-9475-2ade4a18d239)<br>
-
--> yêu cầu cuối cùng đã có trang yêu cầu nhập mã xác minh<br>
-
-![image](https://github.com/user-attachments/assets/5268fb4a-b0d6-423c-b6ae-98a22270b634)<br>
-
-- B4: quay về trang chính và gửi post/login2 đến intruder để brute-force<br>
-
-![image](https://github.com/user-attachments/assets/644f5982-8651-45ce-bfd6-88b4456f5f83)<br>
-
-![image](https://github.com/user-attachments/assets/510066d5-19d3-48f5-b85c-c2c4920d698f)<br>
-
-- B5: thu kết quả (mã xác minh can thay đổi nên cần attack nh lần)<br>
-
+5. Giải<br> (??!)
