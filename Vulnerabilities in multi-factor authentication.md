@@ -131,4 +131,35 @@ As the verification code will reset while you're running your attack, you may ne
  Hint<br>
 You will need to use Burp macros in conjunction with Burp Intruder to solve this lab. For more information about macros, please refer to the Burp Suite documentation. Users proficient in Python might prefer to use the Turbo Intruder extension, which is available from the BApp store.<br>
 
-5. Giải<br> (??!)
+5. Giải<br>
+- B1: thực hiện login và nhập mã xác minh -> sai 2 lần sẽ tự động logout<br>
+
+![image](https://github.com/user-attachments/assets/b338c2aa-b6b1-4c57-b818-f73ad8a2e1fe)<br>
+
+- B2: c.bi các bước để tạo macro<br>
+
+![image](https://github.com/user-attachments/assets/4c4e43bb-91f4-4eb5-b14e-cdfb4f5c0266)<br>
+
+![image](https://github.com/user-attachments/assets/c63c0f93-6aec-4c6f-b838-f03207471225)<br>
+
+![image](https://github.com/user-attachments/assets/8d407e61-7c88-417b-956c-de5aed2536eb)<br>
+
+![image](https://github.com/user-attachments/assets/e4e4d703-a896-4886-811c-8570777bd1c6)<br>
+
+![image](https://github.com/user-attachments/assets/0bd1be5b-d663-4a00-8a3e-9dca6d8dd1ef)<br>
+
+- B3: có đc 1 bộ macro<br>
+
+![image](https://github.com/user-attachments/assets/a5fb4a45-c283-4f49-b41f-3a52ec700274)<br>
+
+- B4: bắt đầu brute-force<br>
+
+![image](https://github.com/user-attachments/assets/517a0192-eed1-40ad-a21a-daf6e519e0ea)<br>
+
+![image](https://github.com/user-attachments/assets/66a36378-e2a1-4f36-a048-2599126bfbd7)<br>
+
+- B5: thu kết quả - lọc payload cho phản hồi 302(can phải attack vài lần)<br>
+
+
+
+
