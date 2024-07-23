@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/9cbad819-daa6-49d4-ab0a-0d158dcb0feb)I. Lý thuyết<br>
+![image](https://github.com/user-attachments/assets/d8fb5944-db92-4246-969b-3347b848e0a8)![image](https://github.com/user-attachments/assets/9cbad819-daa6-49d4-ab0a-0d158dcb0feb)I. Lý thuyết<br>
 - ngoài chức năng login cơ bản, hầu hết web đều cung cấp chức năng bổ sung để user quản lý acc của họ
 - VD: user can thay đổi hoặc đặt lại password khi quên
 - -> các cơ chế này can tạo ra lỗ hổng mà attacker can khai thác
@@ -112,4 +112,120 @@ III. Resetting user passwords<br>
 - -> chức năng reset password vốn rất nguy hiểm và cần đc triển khai 1 cách an toàn
 - có 1 số cách để triển khai tính năng này với mức độ vul khác nhau<br>
 *. Sending passwords by email<br>
-- 
+- việc gửi password hiện tại cho user sẽ ko baoh thực hiện đc nếu web xử lý password an toàn ngay từ đầu
+- thay vào đó web sẽ gửi password mới cho user thông qua mail
+- cần tránh gửi password liên lục qua các kênh ko an toàn
+- trong trh này password đc tạo sẽ hết hạn sau 1 time ngắn or user thay đổi password của họ ngay lập tức
+- truy nhiên, cách này dễ bị man-in-the-middle attack
+- email thg ko đc coi là an toàn vì inbox của nó vừa cố định vừa ko lưu trữ an toàn thông tin bí mật
+- nh user cx đồng bộ inbox của họ trên nh thiết bị trên các kênh ko an toàn<br>
+*. Resetting passwords using a URL<br>
+- 1 phương pháp khác mạnh mẽ hơn là gửi user 1 URL duy nhất để đưa họ tới trang reset password
+- việc triển khai kém an toàn hơn là xài URL với tham số dễ đoán để xác định acc nào đang đc reset: http://vulnerable-website.com/reset-password?user=victim-user
+- attacker can thay đổi tham số user để chỉ bất kì username nào mà chúng chỉ định
+- sau đó họ sẽ đc đưa thảng tới 1 page nơi can đặt password mới cho ng dùng tùy ý này
+- cách triển khai tốt hơn là tạo 1 token có high-entropy, khó đoán và tạo URL dựa trên token này
+- trong trh tốt nhất, URL sẽ ko cung cấp bất kì gợi ý nào về việc password của user nào đang đc reset: http://vulnerable-website.com/reset-password?token=a0ba0d1cb3b63d13822572fcff1a241895d893f659164d4cc550b421ebdd48a8
+- khi user truy cập URL, hệ thống sẽ check xem token này có ở back-end hay ko, và nếu có thì password của user nào sẽ đc reset
+- token này sẽ hết hạn sau 1 time ngắn và bị hủy ngay sau khi user reset password
+- tuy nhiên, 1 số web cx ko thể xác thực token khi biểu mẫu reset đã đc gửi
+- -> attacker can chỉ cần truy cập lại biểu mẫu reset acc của họ, xóa token và tận dụng page này để reset password của acc tùy ý
+- nếu URL đc tạo tư động -> dễ bị nhiễm độc khi reset password
+- trong trh này, attacker can đánh cắp token của user khác và reset password của họ<br>
+
+2. Lab: Password reset broken logic<br>
+This lab's password reset functionality is vulnerable. To solve the lab, reset Carlos's password then log in and access his "My account" page.<br>
+
+Your credentials: wiener:peter<br>
+Victim's username: carlos<br>
+
+3. Giải<br>
+- B1: login acc và nhấn vào quên password để nhận mail<br>
+
+![image](https://github.com/user-attachments/assets/a05b9998-0f98-400a-9a89-27070b3fd881)<br>
+
+- B2: truy cập vào link đc cung cấp để reset<br>
+
+![image](https://github.com/user-attachments/assets/957da488-107d-4a70-8179-e2ca3fc755ff)<br>
+
+- B3: lấy biểu mẫu reset password và chuyển sang repeater <br>
+
+![image](https://github.com/user-attachments/assets/979ccd47-7151-47ef-a896-b9685dc6e730)<br>
+
+- B4: yêu cầu reset lại password cho acc nạn nhân<br>
+
+![image](https://github.com/user-attachments/assets/6b867f60-e87d-4dba-bf13-fe7b227dd08e)<br>
+
+- B5: login acc với password đã reset<br>
+
+4. Lab: Password reset poisoning via middleware<br>
+This lab is vulnerable to password reset poisoning. The user carlos will carelessly click on any links in emails that he receives. To solve the lab, log in to Carlos's account. You can log in to your own account using the following credentials: wiener:peter. Any emails sent to this account can be read via the email client on the exploit server.<br>
+
+5. Giải<br>
+- B1: nhấp vào quên password của acc đc cung cấp và check mail -> reset<br>
+
+![image](https://github.com/user-attachments/assets/9d484cd0-4e45-43a6-81d9-13c96fe55c0b)<br>
+
+- B2: lấy yêu cầu đổi password để gửi tới reepeater <br>
+
+![image](https://github.com/user-attachments/assets/9506fc15-3b1d-413b-aa48-fc47c0837e3a)<br>
+
+- B3: thêm tiêu đề: X-Forwarded-Host -> trỏ đến link reset đc tạo động trong liên kết đến server <br>
+
+![image](https://github.com/user-attachments/assets/a22a7b8e-9323-4a03-8ed4-ae9fee2b3ed0)
+
+- B4: chôm đc token của nạn nhân (temp-forgot-password-token=pmgexs3t9vo9mk8ds1m2x7hohes7cu6f), quay lại mail client để sửa token trong URL thành cái đánh cắp đc<br>
+
+![image](https://github.com/user-attachments/assets/a86c0c06-d0b3-4ba0-ace5-c04eae7c5755)<br>
+
+![image](https://github.com/user-attachments/assets/33ba3574-6b41-43e1-ae36-6b87dbed133d)<br>
+
+- B5: truy cập URL mới và reset password<br>
+
+![image](https://github.com/user-attachments/assets/2d4fe775-12ce-4dd5-8387-45c42ffa0830)<br>
+
+IV. Changing user passwords<br>
+1. Lý thuyết<br>
+- thường là nhập password hiện tại và nhập password mới 2 lần
+- các page này thg xài cùng 1 tiến trình để check username và password hiện tại có khớp với trang login thông thường ko
+- đó đó, các page này thg bị tấn công bởi các kĩ thuật tương tự
+- chức năng thay đổi password này đặc bt nguy hiểm nếu cho phép attacker truy cập trực tiếp mà ko cần login vs tư cách user nạn nhân
+- VD: username đc cung cấp trong trg ẩn và attacker can chỉnh sửa để nhắm đến user tùy ý -> liệt kê username và brute-force password<br>
+
+2. Lab: Password brute-force via password change<br>
+This lab's password change functionality makes it vulnerable to brute-force attacks. To solve the lab, use the list of candidate passwords to brute-force Carlos's account and access his "My account" page.<br>
+
+Your credentials: wiener:peter<br>
+Victim's username: carlos<br>
+Candidate passwords: https://portswigger.net/web-security/authentication/auth-lab-passwords<br>
+
+3. Giải<br>
+- B1: login acc đc cung cấp và thay đổi password<br>
+
+![image](https://github.com/user-attachments/assets/f96ec445-57e1-488b-ae6c-6e746179234c)<br>
+
+- B2: check tiến trình thay đổi password<br>
+
++ password hiện tại sai, 2 password mới giống nhau -> bị khóa<br>
+
+![image](https://github.com/user-attachments/assets/1a9b83df-c432-4f22-9a3c-64dd4db1ff33)<br>
+
++ password hiện tại sai, 2 password mới khác nhau<br>
+
+![image](https://github.com/user-attachments/assets/8640a4b8-d59b-4127-8192-413c74571a43)<br>
+
++ password hiện tại đúng, 2 password mới khác nhau<br>
+
+![image](https://github.com/user-attachments/assets/c3456720-5b19-494a-819b-32e03c874eea)<br>
+
+- B3: gửi yêu cầu thay đổi password đến intruder để brute-force<br>
+
+![image](https://github.com/user-attachments/assets/71880a29-8443-42c6-a909-7302f564ab40)<br>
+
+- B4: tạo payload và brute-force để thu kết quả (2 tham số password mới phải khác nhau để nhận phản hồi)<br>
+
+![image](https://github.com/user-attachments/assets/ae9994f9-825d-4599-b009-e3fee71752ec)<br>
+
+![image](https://github.com/user-attachments/assets/dec47afa-7ffe-48d3-a4af-40e62f29e6fe)<br>
+
+![image](https://github.com/user-attachments/assets/b4fe03bf-e5a7-49c3-a35f-2a497b0ea0e9)<br>
