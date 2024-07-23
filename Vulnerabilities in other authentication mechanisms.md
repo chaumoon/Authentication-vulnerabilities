@@ -103,4 +103,13 @@ Victim's username: carlos<br>
 
 ![image](https://github.com/user-attachments/assets/3b10e2f0-746f-474f-a2f5-89590b60c9c1)<br>
 
-- tool crack: https://crackstation.net/
+- tool crack: https://crackstation.net/<br>
+
+III. Resetting user passwords<br>
+1. Lý thuyết<br>
+- sẽ có 1 số user quên password của họ -> có cách để họ lấy lại password
+- trong trh này xác thực dựa trên password là ko thể thực hiện -> web phải dựa trên phương pháp thay thế đản đảm bảo user thực đang reset password của chính họ
+- -> chức năng reset password vốn rất nguy hiểm và cần đc triển khai 1 cách an toàn
+- có 1 số cách để triển khai tính năng này với mức độ vul khác nhau<br>
+*. Sending passwords by email<br>
+- 
